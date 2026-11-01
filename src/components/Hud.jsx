@@ -1,117 +1,161 @@
 import { useState, useEffect } from 'react'
-import { navLinks, personalInfo, heroContent } from '../data/portfolioData'
+import { personalInfo, navLinks, heroContent } from '../data/portfolioData'
 
 export default function Hud() {
-  const [time, setTime] = useState('')
-  const [statusIndex, setStatusIndex] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [statusIndex, setStatusIndex] = useState(0)
+  const [time, setTime] = useState('')
+
+  // Compute initials (e.g. "VI" or "VD")
+  const brandInitials = (() => {
+    const name = personalInfo.brandName || personalInfo.name || 'VH'
+    const parts = name.trim().split(/\s+/)
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return name.slice(0, 2).toUpperCase()
+  })()
 
   useEffect(() => {
+    // 24-hour clock formatter
     const updateTime = () => {
       try {
-        const now = new Date()
-        const formatted = new Intl.DateTimeFormat('en-US', {
+        const formatter = new Intl.DateTimeFormat('en-GB', {
           timeZone: personalInfo.timezone || 'Asia/Kolkata',
           hour: '2-digit',
           minute: '2-digit',
           second: '2-digit',
           hour12: false,
-        }).format(now)
-        setTime(`${formatted} IST`)
+        })
+        setTime(formatter.format(new Date()))
       } catch {
-        setTime(new Date().toLocaleTimeString())
+        setTime(new Date().toLocaleTimeString('en-GB', { hour12: false }))
       }
     }
 
     updateTime()
-    const timer = setInterval(updateTime, 1000)
+    const clockInterval = setInterval(updateTime, 1000)
 
-    // Cycle through status lines periodically
-    const statusTimer = setInterval(() => {
+    // Cycle status lines every 3.5 seconds
+    const statusInterval = setInterval(() => {
       if (heroContent.statusLines && heroContent.statusLines.length > 0) {
         setStatusIndex((prev) => (prev + 1) % heroContent.statusLines.length)
       }
-    }, 4000)
+    }, 3500)
+
+    // Scroll listener for background blur & border
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
-      clearInterval(timer)
-      clearInterval(statusTimer)
+      clearInterval(clockInterval)
+      clearInterval(statusInterval)
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-40">
-      <div className="border-b border-bone/10 bg-ink/90 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between text-xs font-mono tracking-wider">
-          {/* Brand & Call Sign */}
-          <div className="flex items-center space-x-3">
-            <span className="inline-flex items-center">
-              <span className="h-2 w-2 rounded-full bg-signal animate-pulse mr-2" />
-              <span className="text-bone font-medium tracking-widest uppercase">
-                {personalInfo.brandName || personalInfo.name}
-              </span>
-            </span>
-            <span className="hidden sm:inline-block text-dim">//</span>
-            <span className="hidden sm:inline-block text-signal font-normal truncate max-w-xs">
-              {heroContent.statusLines[statusIndex]}
-            </span>
-          </div>
+  const currentStatus =
+    heroContent.statusLines && heroContent.statusLines[statusIndex]
+      ? heroContent.statusLines[statusIndex]
+      : 'SYSTEM READY'
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6">
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 h-16 transition-all duration-300 ${
+        isScrolled || mobileMenuOpen
+          ? 'bg-ink/80 backdrop-blur-md border-b border-bone/10'
+          : 'bg-transparent border-b border-transparent'
+      }`}
+    >
+      <div className="max-w-[1440px] mx-auto px-5 md:px-10 h-full flex items-center justify-between">
+        {/* Left: Brand Badge & Title */}
+        <a href="#home" className="flex items-center space-x-3 group">
+          <div className="w-8 h-8 flex items-center justify-center border border-signal font-mono text-xs font-semibold text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
+            {brandInitials}
+          </div>
+          <span className="hidden sm:inline-block font-mono text-xs uppercase tracking-[0.2em] text-bone group-hover:text-signal transition-colors">
+            {personalInfo.brandName || personalInfo.name}
+          </span>
+        </a>
+
+        {/* Centre: Live Status Indicator (lg and up) */}
+        <div
+          className="hidden lg:flex items-center space-x-2.5"
+          aria-live="polite"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-dim">
+            {currentStatus}
+          </span>
+        </div>
+
+        {/* Right: Navigation & Live Clock (md and up) */}
+        <div className="hidden md:flex items-center space-x-6">
+          <nav className="flex items-center space-x-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-dim hover:text-signal transition-colors duration-150 py-1 hover:border-b hover:border-signal"
+                className="font-mono text-xs uppercase tracking-[0.18em] text-bone/70 hover:text-signal transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          {/* Location & Local Clock */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden lg:flex items-center space-x-2 text-dim text-[11px]">
-              <span>{personalInfo.city.toUpperCase()}</span>
-            </div>
-            <div className="px-2.5 py-1 border border-bone/15 bg-panel text-bone">
-              {time || '00:00:00 IST'}
-            </div>
+          <div className="h-4 w-px bg-bone/15" aria-hidden="true" />
 
-            {/* Mobile menu trigger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 text-dim hover:text-signal border border-bone/10"
-              aria-label="Toggle navigation"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+          <time
+            className="font-mono text-xs tabular-nums text-dim"
+            title={personalInfo.timezone}
+          >
+            {time || '00:00:00'}
+          </time>
         </div>
 
-        {/* Mobile Nav Dropdown */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-bone/10 bg-panel px-4 py-3 space-y-2 font-mono text-xs">
+        {/* Mobile: Menu Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-hud-menu"
+          className="md:hidden font-mono text-xs uppercase tracking-[0.18em] text-bone hover:text-signal transition-colors px-2 py-1 border border-bone/15"
+        >
+          {mobileMenuOpen ? 'Close' : 'Menu'}
+        </button>
+      </div>
+
+      {/* Mobile Dropdown Panel */}
+      {mobileMenuOpen && (
+        <div
+          id="mobile-hud-menu"
+          className="md:hidden border-b border-bone/10 bg-ink/95 backdrop-blur-xl px-6 py-6 shadow-2xl"
+        >
+          <nav className="flex flex-col">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-bone hover:text-signal transition-colors"
+                className="text-2xl font-semibold text-bone hover:text-signal border-b border-bone/10 py-4 transition-colors"
               >
                 {link.label}
               </a>
             ))}
+          </nav>
+          <div className="pt-6 flex items-center justify-between font-mono text-xs text-dim">
+            <span className="uppercase">{personalInfo.city}</span>
+            <time className="tabular-nums text-bone" title={personalInfo.timezone}>
+              {time}
+            </time>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }
