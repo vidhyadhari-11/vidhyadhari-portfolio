@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { personalInfo, skillCategories, academy } from '../data/portfolioData'
+import { personalInfo, aboutContent, skillGroups, academy } from '../data/portfolioData'
 
 // Resolve about portrait image dynamically with import.meta.glob
 const portraitModules = import.meta.glob('../assets/about/about-portrait.*', { eager: true, query: '?url', import: 'default' })
@@ -39,14 +39,14 @@ export default function About() {
         <div className="about-anim mb-12 flex items-center justify-between border-b border-bone/10 pb-4">
           <div>
             <span className="font-mono text-xs uppercase tracking-widest text-signal">
-              02 // DOSSIER
+              {aboutContent.label}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-bone tracking-tight font-sans mt-1">
-              ENGINEERING PROFILE
+              {aboutContent.heading}
             </h2>
           </div>
           <span className="font-mono text-xs text-dim hidden sm:inline-block">
-            DOC_REF: BIO_v2.0
+            DOC_REF: BIO_2026
           </span>
         </div>
 
@@ -70,35 +70,46 @@ export default function About() {
                   </div>
                   <span className="font-mono text-xs text-bone tracking-wider">PORTRAIT // PLACEHOLDER</span>
                   <span className="font-mono text-[10px] text-dim mt-2">
-                    Upload image to <code>src/assets/about/about-portrait.jpg</code>
+                    Place image in <code>src/assets/about/about-portrait.jpg</code>
                   </span>
                 </div>
               )}
-              {/* Technical Reticle Badge */}
-              <div className="absolute bottom-4 left-4 bg-ink/90 border border-bone/10 px-2 py-1 font-mono text-[10px] text-signal">
-                ID // {personalInfo.name.toUpperCase()}
+              <div className="absolute bottom-4 left-4 bg-ink/90 border border-bone/10 px-2 py-1 font-mono text-[10px] text-signal uppercase">
+                ID // {personalInfo.name}
               </div>
             </div>
           </div>
 
-          {/* Bio Column */}
+          {/* Bio & Stats Column */}
           <div className="about-anim lg:col-span-7 flex flex-col justify-between space-y-6">
             <div className="space-y-4 text-dim leading-relaxed text-base">
-              {personalInfo.bio.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
+              <p>{aboutContent.paragraph}</p>
+            </div>
+
+            {/* Numeric Stats Grid */}
+            <div className="grid grid-cols-3 gap-4 border-y border-bone/10 py-6">
+              {aboutContent.stats.map((stat, idx) => (
+                <div key={idx} className="text-center sm:text-left">
+                  <div className="text-2xl sm:text-3xl font-bold font-mono text-signal">
+                    {stat.value}{stat.suffix}
+                  </div>
+                  <div className="text-xs font-mono text-dim mt-1 uppercase">
+                    {stat.label}
+                  </div>
+                </div>
               ))}
             </div>
 
-            {/* TAP Academy Credential Callout */}
+            {/* Institution Highlight */}
             <div className="p-5 border border-bone/10 bg-panel/60 hud-frame">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-xs text-signal font-semibold tracking-wider">
-                  TRAINING INSTITUTION
+                  PLACEMENT TRAINING
                 </span>
                 <span className="font-mono text-[10px] text-dim">VERIFIED</span>
               </div>
               <p className="text-sm text-bone">
-                Specialized placement training completed at{' '}
+                Undergoing specialized Java Full Stack & AI placement training at{' '}
                 <a
                   href={academy.url}
                   target="_blank"
@@ -107,29 +118,29 @@ export default function About() {
                 >
                   {academy.name}
                 </a>
-                , focusing on scalable full-stack architecture, augmented reality, and modern UI engineering.
+                .
               </p>
             </div>
           </div>
         </div>
 
-        {/* Skill Matrix */}
+        {/* Skill Groups Matrix */}
         <div className="about-anim">
           <div className="flex items-center space-x-2 mb-6">
             <span className="w-2 h-2 bg-signal" />
             <h3 className="font-mono text-xs uppercase tracking-widest text-bone">
-              TECHNICAL CAPABILITIES MATRIX
+              CORE TECHNICAL MODULES
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {skillCategories.map((group) => (
-              <div key={group.category} className="border border-bone/10 bg-panel p-6 hud-frame">
-                <div className="font-mono text-xs text-signal font-semibold border-b border-bone/10 pb-3 mb-4">
-                  // {group.category}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {skillGroups.map((group) => (
+              <div key={group.title} className="border border-bone/10 bg-panel p-6 hud-frame">
+                <div className="font-mono text-xs text-signal font-semibold border-b border-bone/10 pb-3 mb-4 uppercase">
+                  // {group.title}
                 </div>
                 <ul className="space-y-2 font-mono text-xs text-bone">
-                  {group.skills.map((skill) => (
+                  {group.items.map((skill) => (
                     <li key={skill} className="flex items-center space-x-2">
                       <span className="text-signal/70">›</span>
                       <span>{skill}</span>

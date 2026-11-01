@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import gsap from 'gsap'
-import { personalInfo } from '../data/portfolioData'
+import { personalInfo, socialLinks, contactContent, emailjsConfig } from '../data/portfolioData'
 
 export default function Contact() {
   const sectionRef = useRef(null)
@@ -35,12 +35,16 @@ export default function Contact() {
     e.preventDefault()
     setStatus('SENDING')
 
-    // If EmailJS keys are provided in .env, attempt live transmission
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    const { serviceId, templateId, publicKey } = emailjsConfig
 
-    if (serviceId && templateId && publicKey) {
+    if (
+      serviceId &&
+      serviceId !== 'YOUR_EMAILJS_SERVICE_ID' &&
+      templateId &&
+      templateId !== 'YOUR_EMAILJS_TEMPLATE_ID' &&
+      publicKey &&
+      publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY'
+    ) {
       try {
         await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
         setStatus('SUCCESS')
@@ -50,7 +54,7 @@ export default function Contact() {
         setStatus('ERROR')
       }
     } else {
-      // Simulation mode for initial setup
+      // Simulation mode
       setTimeout(() => {
         setStatus('SUCCESS')
         if (formRef.current) formRef.current.reset()
@@ -65,10 +69,10 @@ export default function Contact() {
         <div className="contact-anim mb-14 flex items-center justify-between border-b border-bone/10 pb-4">
           <div>
             <span className="font-mono text-xs uppercase tracking-widest text-signal">
-              05 // TRANSMISSION
+              {contactContent.label}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-bone tracking-tight font-sans mt-1">
-              INITIATE CONTACT
+              {contactContent.heading}
             </h2>
           </div>
           <span className="font-mono text-xs text-dim hidden sm:inline-block">
@@ -77,46 +81,61 @@ export default function Contact() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Direct channels */}
+          {/* Direct Channels */}
           <div className="contact-anim lg:col-span-5 space-y-6">
             <div className="border border-bone/10 bg-panel p-6 hud-frame">
               <span className="font-mono text-xs text-signal font-semibold block mb-2">
                 DIRECT INBOX
               </span>
               <a
-                href={`mailto:${personalInfo.socials.email}`}
+                href={`mailto:${personalInfo.email}`}
                 className="font-mono text-sm text-bone hover:text-signal break-all transition-colors"
               >
-                {personalInfo.socials.email}
+                {personalInfo.email}
               </a>
               <p className="text-xs text-dim mt-2">
-                Average transmission response time: &lt; 24 hours.
+                {contactContent.note}
               </p>
             </div>
 
             <div className="border border-bone/10 bg-panel p-6 hud-frame">
               <span className="font-mono text-xs text-signal font-semibold block mb-3">
-                EXTERNAL NODES
+                COMMUNICATION NODES
               </span>
               <div className="space-y-2 font-mono text-xs">
-                <a
-                  href={personalInfo.socials.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-2 border border-bone/10 text-bone hover:text-signal hover:border-signal transition-colors"
-                >
-                  <span>GITHUB // SOURCE</span>
-                  <span>↗</span>
-                </a>
-                <a
-                  href={personalInfo.socials.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-2 border border-bone/10 text-bone hover:text-signal hover:border-signal transition-colors"
-                >
-                  <span>LINKEDIN // NETWORK</span>
-                  <span>↗</span>
-                </a>
+                {socialLinks.github && (
+                  <a
+                    href={socialLinks.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-2 border border-bone/10 text-bone hover:text-signal hover:border-signal transition-colors"
+                  >
+                    <span>GITHUB // SOURCE</span>
+                    <span>↗</span>
+                  </a>
+                )}
+                {socialLinks.linkedin && (
+                  <a
+                    href={socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-2 border border-bone/10 text-bone hover:text-signal hover:border-signal transition-colors"
+                  >
+                    <span>LINKEDIN // NETWORK</span>
+                    <span>↗</span>
+                  </a>
+                )}
+                {socialLinks.instagram && (
+                  <a
+                    href={socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-2 border border-bone/10 text-bone hover:text-signal hover:border-signal transition-colors"
+                  >
+                    <span>INSTAGRAM</span>
+                    <span>↗</span>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -139,7 +158,7 @@ export default function Contact() {
                     name="user_name"
                     type="text"
                     required
-                    placeholder="e.g. Commander Sarah"
+                    placeholder="e.g. Recruiter Name"
                     className="w-full bg-ink border border-bone/15 px-4 py-2.5 text-bone font-mono text-sm focus:outline-none focus:border-signal"
                   />
                 </div>
@@ -153,7 +172,7 @@ export default function Contact() {
                     name="user_email"
                     type="email"
                     required
-                    placeholder="sarah@organization.com"
+                    placeholder="name@company.com"
                     className="w-full bg-ink border border-bone/15 px-4 py-2.5 text-bone font-mono text-sm focus:outline-none focus:border-signal"
                   />
                 </div>

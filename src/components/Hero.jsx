@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { personalInfo } from '../data/portfolioData'
+import { personalInfo, heroContent } from '../data/portfolioData'
 
 export default function Hero() {
   const containerRef = useRef(null)
@@ -12,7 +12,7 @@ export default function Hero() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    // Setup Three.js Scene
+    // Three.js Scene Setup
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000)
     camera.position.z = 4.2
@@ -25,7 +25,7 @@ export default function Hero() {
     })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-    // Create HUD Geometric Wireframe
+    // Geometry & Materials
     const geometry = new THREE.IcosahedronGeometry(1.8, 2)
     const wireframeMaterial = new THREE.MeshBasicMaterial({
       color: 0x8a8f98,
@@ -36,7 +36,6 @@ export default function Hero() {
     const mesh = new THREE.Mesh(geometry, wireframeMaterial)
     scene.add(mesh)
 
-    // Inner Signal Core Ring
     const innerGeometry = new THREE.TorusGeometry(1.2, 0.02, 16, 100)
     const innerMaterial = new THREE.MeshBasicMaterial({
       color: 0xff5b1f,
@@ -47,7 +46,6 @@ export default function Hero() {
     const innerRing = new THREE.Mesh(innerGeometry, innerMaterial)
     scene.add(innerRing)
 
-    // Outer Reticle Ring
     const outerRingGeometry = new THREE.RingGeometry(2.3, 2.34, 64)
     const outerRingMaterial = new THREE.MeshBasicMaterial({
       color: 0xe8e6df,
@@ -58,7 +56,6 @@ export default function Hero() {
     const outerRing = new THREE.Mesh(outerRingGeometry, outerRingMaterial)
     scene.add(outerRing)
 
-    // Points at vertices
     const pointsMaterial = new THREE.PointsMaterial({
       color: 0xff5b1f,
       size: 0.04,
@@ -103,7 +100,7 @@ export default function Hero() {
     }
     animate()
 
-    // GSAP Entrance animation
+    // GSAP Entrance
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.hero-anim',
@@ -141,70 +138,70 @@ export default function Hero() {
     <section
       id="home"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 hud-grid overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 hud-grid overflow-hidden"
     >
-      {/* 3D Background Canvas */}
+      {/* 3D Wireframe Canvas */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-70">
         <canvas ref={canvasRef} className="w-full h-full max-w-4xl max-h-[800px]" />
       </div>
 
-      {/* Main HUD Frame Container */}
+      {/* Main HUD Card */}
       <div
         ref={contentRef}
-        className="relative z-10 max-w-5xl w-full p-8 sm:p-12 border border-bone/10 bg-panel/75 backdrop-blur-md hud-frame"
+        className="relative z-10 max-w-5xl w-full p-8 sm:p-12 border border-bone/10 bg-panel/80 backdrop-blur-md hud-frame"
       >
-        {/* Top Status Banner */}
-        <div className="hero-anim flex flex-wrap items-center justify-between gap-2 border-b border-bone/10 pb-4 mb-8 text-xs font-mono">
+        {/* Status Bar */}
+        <div className="hero-anim flex flex-wrap items-center justify-between gap-3 border-b border-bone/10 pb-4 mb-8 text-xs font-mono">
           <div className="flex items-center space-x-2 text-signal">
             <span className="w-2 h-2 rounded-full bg-signal animate-ping" />
-            <span className="font-semibold tracking-wider">// SYSTEM READY</span>
+            <span className="font-semibold tracking-wider">// {heroContent.eyebrow}</span>
           </div>
           <div className="text-dim">
-            STATUS: <span className="text-bone">{personalInfo.status}</span>
+            AVAILABILITY: <span className="text-bone">{personalInfo.availability}</span>
           </div>
         </div>
 
-        {/* Headline & Bio */}
+        {/* Identity & Intro */}
         <div className="space-y-4 max-w-3xl">
           <p className="hero-anim text-xs font-mono uppercase tracking-[0.2em] text-signal">
-            // OPERATIONAL PROFILE
+            // FULL-STACK ENGINEER
           </p>
-          <h1 className="hero-anim text-4xl sm:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-bone leading-none">
-            {personalInfo.name.toUpperCase()}
+          <h1 className="hero-anim text-4xl sm:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-bone leading-none uppercase">
+            {personalInfo.name}
           </h1>
           <h2 className="hero-anim text-xl sm:text-2xl font-mono text-dim font-light">
-            {personalInfo.title}
+            {personalInfo.role}
           </h2>
-          <p className="hero-anim text-base sm:text-lg text-dim leading-relaxed pt-2">
-            {personalInfo.subtitle}
+          <p className="hero-anim text-base sm:text-lg text-bone/90 leading-relaxed pt-2">
+            {heroContent.intro}
           </p>
         </div>
 
-        {/* Action Controls & Metric Badges */}
+        {/* Action Controls & Info */}
         <div className="hero-anim mt-10 pt-6 border-t border-bone/10 flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="#projects"
+              href={heroContent.ctaPrimary.href}
               className="px-6 py-3 font-mono text-xs uppercase tracking-wider bg-signal text-ink font-semibold hover:bg-bone transition-colors"
             >
-              EXPLORE PROJECTS [03]
+              {heroContent.ctaPrimary.label}
             </a>
             <a
-              href="#contact"
+              href={heroContent.ctaSecondary.href}
               className="px-6 py-3 font-mono text-xs uppercase tracking-wider border border-bone/20 text-bone hover:border-signal hover:text-signal transition-colors"
             >
-              TRANSMIT MESSAGE
+              {heroContent.ctaSecondary.label}
             </a>
           </div>
 
           <div className="flex items-center space-x-6 text-xs font-mono text-dim">
             <div>
               <span className="block text-bone font-medium">LOCATION</span>
-              <span>{personalInfo.location}</span>
+              <span>{personalInfo.city}</span>
             </div>
             <div>
-              <span className="block text-bone font-medium">TRAINING</span>
-              <span>TAP ACADEMY</span>
+              <span className="block text-bone font-medium">STATUS</span>
+              <span className="text-signal">ACTIVE</span>
             </div>
           </div>
         </div>

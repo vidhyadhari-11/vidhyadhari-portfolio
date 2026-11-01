@@ -43,10 +43,10 @@ export default function Projects() {
         <div className="mb-14 flex items-center justify-between border-b border-bone/10 pb-4">
           <div>
             <span className="font-mono text-xs uppercase tracking-widest text-signal">
-              03 // ARTIFACTS
+              02 // WORK
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-bone tracking-tight font-sans mt-1">
-              FEATURED PROJECTS
+              FEATURED APPLICATIONS
             </h2>
           </div>
           <span className="font-mono text-xs text-dim hidden sm:inline-block">
@@ -55,7 +55,7 @@ export default function Projects() {
         </div>
 
         {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {projects.map((project) => {
             const imgUrl = getProjectImage(project.id)
             return (
@@ -74,32 +74,29 @@ export default function Projects() {
                   ) : (
                     <div className="w-full h-full p-6 flex flex-col items-center justify-center text-center hud-grid">
                       <div className="text-xs font-mono text-signal mb-1">
-                        [SYS_IMG // {project.index}]
+                        [SYS_IMG // {project.number}]
                       </div>
                       <div className="text-sm font-sans font-medium text-bone">
                         {project.title}
                       </div>
                       <div className="text-[10px] font-mono text-dim mt-2">
-                        Place asset in <code>src/assets/projects/{project.id}.png</code>
+                        {project.year}
                       </div>
                     </div>
                   )}
                   {/* Top-right index badge */}
                   <div className="absolute top-3 right-3 bg-ink/90 border border-bone/10 px-2 py-0.5 font-mono text-[10px] text-bone">
-                    SYS.NO_{project.index}
+                    SYS.NO_{project.number}
                   </div>
                 </div>
 
                 {/* Card Body */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-bone font-sans group-hover:text-signal transition-colors">
+                    <h3 className="text-lg font-bold text-bone font-sans group-hover:text-signal transition-colors">
                       {project.title}
                     </h3>
-                    <p className="font-mono text-xs text-signal mt-1">
-                      {project.tagline}
-                    </p>
-                    <p className="text-sm text-dim leading-relaxed mt-3">
+                    <p className="text-xs text-dim leading-relaxed mt-2.5">
                       {project.description}
                     </p>
                   </div>
@@ -119,25 +116,31 @@ export default function Projects() {
 
                     {/* Links */}
                     <div className="flex items-center space-x-4 font-mono text-xs">
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-signal hover:underline flex items-center space-x-1"
-                      >
-                        <span>DEPLOYMENT</span>
-                        <span>↗</span>
-                      </a>
-                      <span className="text-dim/40">|</span>
-                      <a
-                        href={project.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-bone hover:text-signal transition-colors flex items-center space-x-1"
-                      >
-                        <span>SOURCE_CODE</span>
-                        <span>›</span>
-                      </a>
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-signal hover:underline flex items-center space-x-1"
+                        >
+                          <span>LIVE</span>
+                          <span>↗</span>
+                        </a>
+                      )}
+                      {project.liveUrl && project.githubUrl && (
+                        <span className="text-dim/40">|</span>
+                      )}
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-bone hover:text-signal transition-colors flex items-center space-x-1"
+                        >
+                          <span>CODE</span>
+                          <span>›</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

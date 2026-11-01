@@ -1,117 +1,153 @@
+// ============================================================
+// portfolioData.js — ALL content for the portfolio lives here.
+// Components only read from this file.
+// ============================================================
+
+export const personalInfo = {
+  name: "vidhyadhari",
+  brandName: "vidhyadhari",
+  role: "Java Full Stack Developer",
+  city: "Bengaluru, India",
+  timezone: "Asia/Kolkata", // IANA timezone used by the live clock in the HUD
+  email: "anasanividhyadhari77@gmail.com",
+  phone: "",
+  availability: "Open to internships & full-time roles",
+};
+
 export const academy = {
   name: "TAP Academy",
   url: "https://thetapacademy.com/",
-}
+};
 
-export const personalInfo = {
-  name: "Vidhyadhari",
-  title: "Full-Stack Developer & Creative Technologist",
-  subtitle: "Specializing in React, Node.js, AI integrations, and augmented reality experiences.",
-  location: "Bangalore, India",
-  status: "OPEN FOR OPPORTUNITIES",
-  bio: [
-    "Passionate software engineer trained at TAP Academy, with expertise in modern full-stack web development, immersive UI design, and scalable architectures.",
-    "I craft responsive, high-performance web applications with a strong focus on technical precision, interactive animations, and intuitive user experiences.",
-    "Currently exploring 3D interactive graphics, augmented reality web experiences, and intelligent agentic workflows."
-  ],
-  socials: {
-    github: "https://github.com/vidhyadhari",
-    linkedin: "https://linkedin.com/in/vidhyadhari",
-    email: "anasanividhyadhari77@gmail.com",
-  },
-}
+export const socialLinks = {
+  github: "https://github.com/vidhyadhari-11",
+  linkedin: "https://www.linkedin.com/in/vidhyadhari",
+  instagram: "",
+};
 
 export const navLinks = [
-  { id: "home", label: "01 // HOME" },
-  { id: "about", label: "02 // ABOUT" },
-  { id: "projects", label: "03 // PROJECTS" },
-  { id: "journey", label: "04 // JOURNEY" },
-  { id: "contact", label: "05 // CONTACT" },
-]
+  { label: "About", href: "#about" },
+  { label: "Work", href: "#projects" },
+  { label: "Journey", href: "#journey" },
+  { label: "Contact", href: "#contact" },
+];
 
-export const skillCategories = [
+export const heroContent = {
+  eyebrow: "PORTFOLIO — 2026",
+  intro: "I build responsive web applications and full-stack solutions using Java, React, and modern technologies.",
+  statusLines: [
+    "Building with Java & React",
+    "Exploring AI technologies",
+    "Developing real-world projects",
+  ],
+  ctaPrimary: { label: "View projects", href: "#projects" },
+  ctaSecondary: { label: "Get in touch", href: "#contact" },
+};
+
+export const aboutContent = {
+  label: "01 / About",
+  heading: "Building robust Java & full-stack applications.",
+  paragraph:
+    "I'm a Computer Science graduate from Sri Venkateswara University, 2026 batch. I have a good understanding of Java, SQL, OOP concepts, and web technologies, and I have worked on full-stack projects through my academic and internship experience. Currently, I'm sharpening my skills through the placement training program at TAP Academy, and I'm passionate about learning new technologies and building real-world applications.",
+  stats: [
+    { value: 100, suffix: "+", label: "DSA problems solved" },
+    { value: 1, suffix: "", label: "Internship completed" },
+    { value: 8.90, suffix: "", label: "CGPA achieved" },
+  ],
+};
+
+export const skillGroups = [
   {
-    category: "FRONTEND CORE",
-    skills: ["React 19", "JavaScript (ES6+)", "Tailwind CSS v4", "HTML5 / Canvas", "Three.js", "GSAP / Framer"],
+    title: "Languages & Core",
+    items: ["Java", "Python", "C++", "Data Structures", "Algorithms", "OOP"],
   },
   {
-    category: "BACKEND & DATA",
-    skills: ["Node.js", "Express", "RESTful APIs", "MongoDB", "PostgreSQL", "Git / GitHub"],
+    title: "Web Technologies",
+    items: ["HTML5", "CSS3", "JavaScript", "React", "Tailwind CSS"],
   },
   {
-    category: "SPECIALIZATIONS",
-    skills: ["Augmented Reality Web", "AI-Powered Interfaces", "Performance Optimization", "Creative UI/UX Architecture"],
+    title: "Databases & Backend",
+    items: ["MySQL", "Node.js", "Express.js", "JDBC", "Servlets"],
   },
-]
+  {
+    title: "Tools & Platforms",
+    items: ["GitHub", "Git", "Eclipse", "VS Code", "ChatGPT"],
+  },
+];
 
 export const projects = [
   {
     id: "project-1",
-    index: "01",
-    title: "NeuroHUD Interface",
-    tagline: "Real-time AI telemetry & interactive sensor dashboard",
+    number: "01",
+    title: "QuickBlog – Blogging Platform",
     description:
-      "A high-frequency diagnostic heads-up display dashboard visualizing real-time hardware telemetry and neural network metrics using WebGL and GSAP.",
-    tags: ["React", "Three.js", "Tailwind CSS", "GSAP", "WebSockets"],
-    liveUrl: "https://example.com/project-1",
-    repoUrl: "https://github.com/vidhyadhari/neuro-hud",
-    image: "project-1.png",
+      "Full-stack blogging application for creating, publishing, editing, and managing blog posts with secure JWT authentication.",
+    tags: ["React", "Node.js", "MongoDB"],
+    year: "2026",
+    liveUrl: "https://quickblog-neon.vercel.app/",
+    githubUrl: "https://github.com/vidhyadhari-11/quickblog",
   },
   {
     id: "project-2",
-    index: "02",
-    title: "Aetheria AR Web Engine",
-    tagline: "Markerless web-based augmented reality product showcase",
+    number: "02",
+    title: "VisionConnect – AI-Based Accessibility Platform",
     description:
-      "Lightweight in-browser AR viewer designed during TAP Academy placement training for zero-download 3D model visualization and spatial interaction.",
-    tags: ["Three.js", "WebXR", "JavaScript", "GLTF Pipeline"],
-    liveUrl: "https://example.com/project-2",
-    repoUrl: "https://github.com/vidhyadhari/aetheria-ar",
-    image: "project-2.png",
+      "Accessibility platform for visually impaired users featuring real-time volunteer matching, automated request handling, and secure admin management.",
+    tags: ["React", "Node.js", "Web Speech API"],
+    year: "2026",
+    liveUrl: "https://visually-impaired-connect-project.vercel.app/",
+    githubUrl: "https://github.com/vidhyadhari-11/visually-impaired-connect--project",
   },
   {
     id: "project-3",
-    index: "03",
-    title: "OmniCart Commerce Platform",
-    tagline: "Scalable full-stack e-commerce engine with real-time inventory",
+    number: "03",
+    title: "Interactive Weather Application",
     description:
-      "Modern full-stack shopping architecture featuring secure checkout, dynamic catalog filtering, webhook processing, and sub-100ms API response times.",
-    tags: ["React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS"],
-    liveUrl: "https://example.com/project-3",
-    repoUrl: "https://github.com/vidhyadhari/omnicart-store",
-    image: "project-3.png",
+      "Responsive weather application providing real-time, location-based weather updates using geolocation.",
+    tags: ["JavaScript", "HTML5 / CSS3", "OpenWeatherMap API"],
+    year: "2025",
+    liveUrl: "https://vidhyadhari-11.github.io/weather-app/",
+    githubUrl: "https://github.com/vidhyadhari-11/weather-app",
   },
-  {
-    id: "project-4",
-    index: "04",
-    title: "PulseSync Cloud Workspace",
-    tagline: "Collaborative developer workspace with live operational state",
-    description:
-      "Multiplayer developer workbench offering live collaborative coding rooms, instant terminal replay, and low-latency cloud state synchronization.",
-    tags: ["React", "Node.js", "WebRTC", "Socket.io", "Tailwind CSS"],
-    liveUrl: "https://example.com/project-4",
-    repoUrl: "https://github.com/vidhyadhari/pulsesync",
-    image: "project-4.png",
-  },
-]
+];
 
-export const journey = [
+export const experience = [
   {
-    period: "2024 — PRESENT",
-    role: "Placement Training & Full-Stack Specialization",
-    organization: "TAP Academy",
-    location: "Bangalore, India",
+    period: "Jul 2026 — Present",
+    role: "Java Full Stack Development Intern",
+    org: "TAP Academy",
     description:
-      "Undergoing rigorous hands-on software development training in modern full-stack web engineering, data structures, algorithms, and immersive technologies (AI and augmented reality).",
-    highlights: ["Full-Stack MERN Architecture", "Core Java & DSA Foundations", "Augmented Reality & Web3D Workshops"],
+      "Learning Core Java, OOP, JDBC, Servlets, JSP, MySQL and full-stack development.",
   },
   {
-    period: "2020 — 2024",
-    role: "Bachelor of Technology in Computer Science & Engineering",
-    organization: "University Engineering Institute",
-    location: "India",
+    period: "Feb 2026 — Apr 2026",
+    role: "Full Stack Developer Intern",
+    org: "Infosys Springboard",
     description:
-      "Completed undergraduate engineering with strong foundations in software design, computer networking, relational database systems, and object-oriented programming.",
-    highlights: ["Academic Excellence Merit", "Technical Lead in University Coding Guild", "Capstone Project on Real-time Sensor Systems"],
+      "Developed a Tax and Finance Management application using the MERN stack.",
   },
-]
+  {
+    period: "2022 — 2026",
+    role: "B.Tech Computer Science and Engineering",
+    org: "Sri Venkateswara University",
+    description:
+      "Graduated with 8.90 CGPA with strong foundations in Java, SQL, and data structures.",
+  },
+];
+
+export const contactContent = {
+  label: "04 / Contact",
+  heading: "Let's build something.",
+  note: "Have a role, a project or a question? Send a message — I reply within a day.",
+};
+
+export const footerContent = {
+  tagline: "Designed & built by hand.",
+};
+
+// EmailJS — values come from .env.local (variables must start with VITE_)
+export const emailjsConfig = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || "YOUR_EMAILJS_SERVICE_ID",
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "YOUR_EMAILJS_TEMPLATE_ID",
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_EMAILJS_PUBLIC_KEY",
+};

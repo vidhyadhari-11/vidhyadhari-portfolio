@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { journey } from '../data/portfolioData'
+import { experience } from '../data/portfolioData'
 
 export default function Journey() {
   const sectionRef = useRef(null)
@@ -35,7 +35,7 @@ export default function Journey() {
         <div className="mb-14 flex items-center justify-between border-b border-bone/10 pb-4">
           <div>
             <span className="font-mono text-xs uppercase tracking-widest text-signal">
-              04 // TRAJECTORY
+              03 // TRAJECTORY
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-bone tracking-tight font-sans mt-1">
               ENGINEERING JOURNEY
@@ -48,7 +48,7 @@ export default function Journey() {
 
         {/* Timeline List */}
         <div className="relative border-l border-bone/15 pl-6 sm:pl-8 space-y-12 ml-2 sm:ml-4">
-          {journey.map((item, index) => (
+          {experience.map((item, index) => (
             <div key={index} className="journey-item relative">
               {/* Signal Node Dot */}
               <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3.5 w-3.5 rounded-full bg-ink border-2 border-signal flex items-center justify-center">
@@ -62,34 +62,17 @@ export default function Journey() {
                     {item.period}
                   </span>
                   <span className="font-mono text-[10px] text-dim uppercase">
-                    {item.location}
+                    {item.org}
                   </span>
                 </div>
 
                 <h3 className="text-xl font-bold text-bone font-sans">
                   {item.role}
                 </h3>
-                <div className="text-sm font-mono text-dim mt-0.5">
-                  {item.organization}
-                </div>
 
-                <p className="text-sm text-dim leading-relaxed mt-4">
+                <p className="text-sm text-dim leading-relaxed mt-3">
                   {item.description}
                 </p>
-
-                {/* Highlights */}
-                {item.highlights && item.highlights.length > 0 && (
-                  <div className="mt-4 pt-3 border-t border-bone/10 flex flex-wrap gap-2">
-                    {item.highlights.map((highlight) => (
-                      <span
-                        key={highlight}
-                        className="px-2 py-0.5 text-[10px] font-mono border border-bone/10 bg-ink/40 text-bone"
-                      >
-                        // {highlight}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           ))}
