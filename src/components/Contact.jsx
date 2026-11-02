@@ -5,6 +5,8 @@ import ScrambleText from './ScrambleText'
 export default function Contact() {
   const formRef = useRef(null)
   const [status, setStatus] = useState(null) // null | 'sending' | 'success' | 'error'
+  const [errorDetail, setErrorDetail] = useState('')
+  const [fallbackPayload, setFallbackPayload] = useState(null)
   const timerRef = useRef(null)
 
   const firstName = (personalInfo.name || 'user').trim().split(/\s+/)[0].toLowerCase()
@@ -12,9 +14,17 @@ export default function Contact() {
   const setTimedStatus = (newStatus) => {
     setStatus(newStatus)
     if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => {
-      setStatus(null)
-    }, 4000)
+    if (newStatus === 'success') {
+      timerRef.current = setTimeout(() => {
+        setStatus(null)
+      }, 5000)
+    }
+  }
+
+  const openMailtoFallback = (name, email, message) => {
+    const subject = encodeURIComponent('Portfolio Contact')
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
+    window.open(`mailto:${personalInfo.email}?subject=${subject}&body=${body}`, '_blank')
   }
 
   const handleSubmit = async (e) => {
@@ -25,6 +35,8 @@ export default function Contact() {
     const name = formData.get('user_name') || ''
     const email = formData.get('user_email') || ''
     const message = formData.get('message') || ''
+
+    setFallbackPayload({ name, email, message })
 
     const { serviceId, templateId, publicKey } = emailjsConfig
     const isConfigured = Boolean(
@@ -37,10 +49,7 @@ export default function Contact() {
     )
 
     if (!isConfigured) {
-      // Fallback to mailto link
-      const subject = encodeURIComponent('Portfolio contact')
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
-      window.open(`mailto:${personalInfo.email}?subject=${subject}&body=${body}`, '_blank')
+      openMailtoFallback(name, email, message)
       setTimedStatus('success')
       formRef.current.reset()
       return
@@ -48,12 +57,29 @@ export default function Contact() {
 
     try {
       setStatus('sending')
+      setErrorDetail('')
       const emailjs = await import('@emailjs/browser')
-      await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
+
+      // Send with comprehensive template parameter aliases to match any EmailJS template schema
+      const templateParams = {
+        user_name: name,
+        from_name: name,
+        name: name,
+        user_email: email,
+        from_email: email,
+        email: email,
+        reply_to: email,
+        message: message,
+        to_name: personalInfo.name,
+      }
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey)
       setTimedStatus('success')
       formRef.current.reset()
     } catch (err) {
       console.error('EmailJS transmission error:', err)
+      const detail = err?.text || err?.message || 'EmailJS service unavailable'
+      setErrorDetail(detail)
       setTimedStatus('error')
     }
   }
@@ -193,15 +219,28 @@ export default function Contact() {
                 <span>→</span>
               </button>
 
-              {/* Status Message */}
-              <p role="status" className="font-mono text-xs min-h-[1.5rem]">
+              {/* Status & Error Feedback */}
+              <div role="status" className="font-mono text-xs min-h-[1.5rem]">
                 {status === 'success' && (
                   <span className="text-emerald-400">✓ Message sent. Talk soon.</span>
                 )}
                 {status === 'error' && (
-                  <span className="text-red-400">✕ Something went wrong. Please try again.</span>
+                  <div className="space-y-2">
+                    <p className="text-red-400">
+                      ✕ Transmission failed: {errorDetail || 'EmailJS rejected request.'}
+                    </p>
+                    {fallbackPayload && (
+                      <button
+                        type="button"
+                        onClick={() => openMailtoFallback(fallbackPayload.name, fallbackPayload.email, fallbackPayload.message)}
+                        className="text-signal underline hover:text-bone text-xs font-mono transition-colors block text-left"
+                      >
+                        Click here to dispatch directly via your Email app ↗
+                      </button>
+                    )}
+                  </div>
                 )}
-              </p>
+              </div>
             </form>
           </div>
         </div>
