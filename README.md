@@ -4,7 +4,7 @@ A dark, technical, "Signal HUD" developer portfolio built with React 19, Vite, T
 
 ## Live Site
 
-- **Live Demo:** [https://YOUR-SITE-URL/](https://YOUR-SITE-URL/)
+- **Live Demo:** [https://portfolio-vidhyadharis-projects-ac91fa46.vercel.app/](https://portfolio-vidhyadharis-projects-ac91fa46.vercel.app/)
 
 ## Tech Stack
 
