@@ -103,8 +103,8 @@ export default function About() {
                   </span>
                 </div>
               )}
-              <div className="absolute bottom-4 left-4 bg-ink/90 border border-bone/10 px-2 py-1 font-mono text-[10px] text-signal uppercase">
-                ID // {personalInfo.name}
+              <div className="absolute bottom-4 left-4 bg-ink/90 border border-bone/10 px-2 py-1 font-mono text-[10px] text-signal uppercase tracking-wider">
+                {personalInfo.name}
               </div>
             </div>
           </div>

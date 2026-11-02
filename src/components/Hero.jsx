@@ -67,7 +67,7 @@ export default function Hero() {
         <div className="space-y-6">
           {/* Eyebrow */}
           <div data-hero="fade" className="font-mono text-xs uppercase tracking-[0.3em] text-signal">
-            // {heroContent.eyebrow}
+            {heroContent.eyebrow}
           </div>
 
           {/* Split Name Headline */}

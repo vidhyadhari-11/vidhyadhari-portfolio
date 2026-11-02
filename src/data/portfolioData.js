@@ -33,7 +33,7 @@ export const navLinks = [
 ];
 
 export const heroContent = {
-  eyebrow: "PORTFOLIO — 2026",
+  eyebrow: "PORTFOLIO 2026",
   intro: "I build responsive web applications and full-stack solutions using Java, React, and modern technologies.",
   statusLines: [
     "Building with Java & React",
