@@ -87,7 +87,7 @@ export default function About() {
               {portraitUrl ? (
                 <img
                   src={portraitUrl}
-                  alt={`${personalInfo.name} Portrait`}
+                  alt="vidhyadhari — Java Full Stack Developer, TAP Academy student"
                   className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-300"
                 />
               ) : (
