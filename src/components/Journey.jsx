@@ -1,82 +1,139 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { experience } from '../data/portfolioData'
+import ScrambleText from './ScrambleText'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function Journey() {
   const sectionRef = useRef(null)
+  const listRef = useRef(null)
+  const lineFillRef = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const list = listRef.current
+      const lineFill = lineFillRef.current
+      if (!list || !lineFill) return
+
+      // Animate vertical signal line filling with scroll
       gsap.fromTo(
-        '.journey-item',
-        { opacity: 0, x: -20 },
+        lineFill,
+        { scaleY: 0 },
         {
-          opacity: 1,
-          x: 0,
-          duration: 0.7,
-          stagger: 0.2,
-          ease: 'power2.out',
+          scaleY: 1,
+          ease: 'none',
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            once: true,
+            trigger: list,
+            start: 'top 70%',
+            end: 'bottom 60%',
+            scrub: true,
           },
         }
       )
+
+      // Per-item trigger: fade in from x: 30 and activate square node on scroll fill
+      const items = list.querySelectorAll('.journey-entry')
+      items.forEach((item) => {
+        // Entrance animation
+        gsap.fromTo(
+          item,
+          { opacity: 0, x: 30 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        )
+
+        // Node activation trigger
+        ScrollTrigger.create({
+          trigger: item,
+          start: 'top 65%',
+          onEnter: () => item.classList.add('is-on'),
+          onLeaveBack: () => item.classList.remove('is-on'),
+        })
+      })
     }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section id="journey" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 border-t border-bone/10">
-      <div className="max-w-4xl mx-auto">
-        {/* Section Header */}
-        <div className="mb-14 flex items-center justify-between border-b border-bone/10 pb-4">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-signal">
-              03 // TRAJECTORY
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-bone tracking-tight font-sans mt-1">
-              ENGINEERING JOURNEY
-            </h2>
-          </div>
-          <span className="font-mono text-xs text-dim hidden sm:inline-block">
-            CHRONO_LOG
-          </span>
+    <section id="journey" ref={sectionRef} className="px-5 md:px-10 py-28 md:py-40">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20">
+        
+        {/* LEFT COLUMN: Sticky Header */}
+        <div className="lg:sticky lg:top-28 lg:self-start space-y-4">
+          <ScrambleText
+            trigger="view"
+            text="03 / Journey"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-signal block"
+          />
+          <h2 className="text-[clamp(2.4rem,5vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.03em] text-bone font-sans">
+            Where I've been learning and building.
+          </h2>
         </div>
 
-        {/* Timeline List */}
-        <div className="relative border-l border-bone/15 pl-6 sm:pl-8 space-y-12 ml-2 sm:ml-4">
-          {experience.map((item, index) => (
-            <div key={index} className="journey-item relative">
-              {/* Signal Node Dot */}
-              <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3.5 w-3.5 rounded-full bg-ink border-2 border-signal flex items-center justify-center">
-                <div className="h-1.5 w-1.5 rounded-full bg-signal" />
-              </div>
+        {/* RIGHT COLUMN: Interactive Timeline */}
+        <div className="relative">
+          <ol ref={listRef} className="relative pl-10 space-y-16 list-none">
+            {/* Background 1px base line */}
+            <div
+              className="absolute left-[7px] top-3 bottom-3 w-px bg-bone/15 pointer-events-none"
+              aria-hidden="true"
+            />
 
-              {/* Card Container */}
-              <div className="border border-bone/10 bg-panel p-6 hud-frame">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-bone/10 pb-3 mb-4">
-                  <span className="font-mono text-xs text-signal font-semibold">
-                    {item.period}
-                  </span>
-                  <span className="font-mono text-[10px] text-dim uppercase">
-                    {item.org}
-                  </span>
+            {/* Foreground filling signal line */}
+            <div
+              ref={lineFillRef}
+              className="absolute left-[7px] top-3 bottom-3 w-px bg-signal origin-top pointer-events-none will-change-transform"
+              style={{ transformOrigin: 'top center' }}
+              aria-hidden="true"
+            />
+
+            {experience.map((item, index) => (
+              <li
+                key={index}
+                className="journey-entry relative space-y-3 transition-colors [&.is-on_.node]:bg-signal [&.is-on_.node]:scale-100"
+              >
+                {/* 15px Square Node Indicator */}
+                <div
+                  className="node absolute left-[-40px] top-1.5 w-[15px] h-[15px] border border-signal bg-ink scale-75 transition-all duration-300 pointer-events-none"
+                  aria-hidden="true"
+                />
+
+                {/* Period */}
+                <div className="font-mono text-xs uppercase tracking-[0.25em] text-dim">
+                  {item.period}
                 </div>
 
-                <h3 className="text-xl font-bold text-bone font-sans">
+                {/* Role */}
+                <h3 className="text-2xl md:text-3xl font-bold text-bone font-sans tracking-tight">
                   {item.role}
                 </h3>
 
-                <p className="text-sm text-dim leading-relaxed mt-3">
+                {/* Organisation */}
+                <div className="font-mono text-sm text-signal font-medium">
+                  {item.org}
+                </div>
+
+                {/* Description */}
+                <p className="text-bone/70 leading-relaxed font-sans text-sm md:text-base max-w-2xl">
                   {item.description}
                 </p>
-              </div>
-            </div>
-          ))}
+              </li>
+            ))}
+          </ol>
         </div>
+
       </div>
     </section>
   )
