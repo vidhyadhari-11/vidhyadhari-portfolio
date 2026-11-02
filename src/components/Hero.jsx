@@ -1,106 +1,13 @@
 import { useEffect, useRef } from 'react'
-import * as THREE from 'three'
 import gsap from 'gsap'
 import { personalInfo, heroContent } from '../data/portfolioData'
+import HeroScene from './HeroScene'
 
 export default function Hero() {
   const containerRef = useRef(null)
-  const canvasRef = useRef(null)
   const contentRef = useRef(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    // Three.js Scene Setup
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000)
-    camera.position.z = 4.2
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-    // Geometry & Materials
-    const geometry = new THREE.IcosahedronGeometry(1.8, 2)
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x8a8f98,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.15,
-    })
-    const mesh = new THREE.Mesh(geometry, wireframeMaterial)
-    scene.add(mesh)
-
-    const innerGeometry = new THREE.TorusGeometry(1.2, 0.02, 16, 100)
-    const innerMaterial = new THREE.MeshBasicMaterial({
-      color: 0xff5b1f,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.6,
-    })
-    const innerRing = new THREE.Mesh(innerGeometry, innerMaterial)
-    scene.add(innerRing)
-
-    const outerRingGeometry = new THREE.RingGeometry(2.3, 2.34, 64)
-    const outerRingMaterial = new THREE.MeshBasicMaterial({
-      color: 0xe8e6df,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.08,
-    })
-    const outerRing = new THREE.Mesh(outerRingGeometry, outerRingMaterial)
-    scene.add(outerRing)
-
-    const pointsMaterial = new THREE.PointsMaterial({
-      color: 0xff5b1f,
-      size: 0.04,
-      transparent: true,
-      opacity: 0.8,
-    })
-    const points = new THREE.Points(geometry, pointsMaterial)
-    scene.add(points)
-
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return
-      const width = canvas.parentElement.clientWidth
-      const height = canvas.parentElement.clientHeight
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-
-    let isVisible = true
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting
-    })
-    if (containerRef.current) observer.observe(containerRef.current)
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let animationFrameId = null
-
-    const animate = () => {
-      if (isVisible && !prefersReducedMotion) {
-        mesh.rotation.x += 0.0015
-        mesh.rotation.y += 0.002
-        innerRing.rotation.x -= 0.003
-        innerRing.rotation.z += 0.002
-        outerRing.rotation.z += 0.001
-        renderer.render(scene, camera)
-      } else if (isVisible) {
-        renderer.render(scene, camera)
-      }
-      animationFrameId = requestAnimationFrame(animate)
-    }
-    animate()
-
-    // GSAP Entrance
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.hero-anim',
@@ -116,22 +23,7 @@ export default function Hero() {
       )
     }, contentRef)
 
-    return () => {
-      ctx.revert()
-      window.removeEventListener('resize', handleResize)
-      observer.disconnect()
-      if (animationFrameId) cancelAnimationFrame(animationFrameId)
-
-      // Three.js cleanup
-      geometry.dispose()
-      wireframeMaterial.dispose()
-      innerGeometry.dispose()
-      innerMaterial.dispose()
-      outerRingGeometry.dispose()
-      outerRingMaterial.dispose()
-      pointsMaterial.dispose()
-      renderer.dispose()
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
@@ -140,15 +32,17 @@ export default function Hero() {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 hud-grid overflow-hidden"
     >
-      {/* 3D Wireframe Canvas */}
-      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-70">
-        <canvas ref={canvasRef} className="w-full h-full max-w-4xl max-h-[800px]" />
+      {/* 3D Interactive Background Scene */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center opacity-75 pointer-events-auto">
+        <div className="w-full h-full max-w-4xl max-h-[800px]">
+          <HeroScene />
+        </div>
       </div>
 
       {/* Main HUD Card */}
       <div
         ref={contentRef}
-        className="relative z-10 max-w-5xl w-full p-8 sm:p-12 border border-bone/10 bg-panel/80 backdrop-blur-md hud-frame"
+        className="relative z-10 max-w-5xl w-full p-8 sm:p-12 border border-bone/10 bg-panel/80 backdrop-blur-md hud-frame pointer-events-auto"
       >
         {/* Status Bar */}
         <div className="hero-anim flex flex-wrap items-center justify-between gap-3 border-b border-bone/10 pb-4 mb-8 text-xs font-mono">
