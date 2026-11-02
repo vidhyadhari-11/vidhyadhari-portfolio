@@ -74,7 +74,7 @@ export default function Hud() {
     >
       <div className="max-w-[1440px] mx-auto px-5 md:px-10 h-full flex items-center justify-between">
         {/* Left: Brand Badge & Title */}
-        <a href="#home" className="flex items-center space-x-3 group">
+        <a href="#home" aria-label={`${personalInfo.brandName || personalInfo.name} — back to top`} className="flex items-center space-x-3 group">
           <div className="w-8 h-8 flex items-center justify-center border border-signal font-mono text-xs font-semibold text-signal transition-colors group-hover:bg-signal group-hover:text-ink">
             {brandInitials}
           </div>
@@ -96,7 +96,7 @@ export default function Hud() {
 
         {/* Right: Navigation & Live Clock (md and up) */}
         <div className="hidden md:flex items-center space-x-6">
-          <nav className="flex items-center space-x-6">
+          <nav aria-label="Primary navigation" className="flex items-center space-x-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -136,7 +136,7 @@ export default function Hud() {
           id="mobile-hud-menu"
           className="md:hidden border-b border-bone/10 bg-ink/95 backdrop-blur-xl px-6 py-6 shadow-2xl"
         >
-          <nav className="flex flex-col">
+          <nav aria-label="Mobile navigation" className="flex flex-col">
             {navLinks.map((link) => (
               <a
                 key={link.href}

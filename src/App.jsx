@@ -16,7 +16,7 @@ export default function App() {
     <div className="min-h-screen bg-ink text-bone font-sans antialiased selection:bg-signal selection:text-ink">
       <Cursor />
       <Hud />
-      <main>
+      <main aria-label="Portfolio content">
         <Hero />
         <About />
         <Projects />

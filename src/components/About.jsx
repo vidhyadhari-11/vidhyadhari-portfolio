@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { personalInfo, aboutContent, skillGroups, academy } from '../data/portfolioData'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // Resolve about portrait image dynamically with import.meta.glob
 const portraitModules = import.meta.glob('../assets/about/about-portrait.*', { eager: true, query: '?url', import: 'default' })
@@ -11,6 +14,7 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Fade-in entrance for all animated blocks
       gsap.fromTo(
         '.about-anim',
         { opacity: 0, y: 25 },
@@ -27,6 +31,31 @@ export default function About() {
           },
         }
       )
+
+      // Count-up animation for numeric stats (fires once)
+      sectionRef.current.querySelectorAll('.stat-value').forEach((el) => {
+        const target = parseFloat(el.dataset.target)
+        const isDecimal = !Number.isInteger(target)
+        gsap.fromTo(
+          el,
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 1.6,
+            ease: 'power2.out',
+            snap: { innerText: isDecimal ? 0.01 : 1 },
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 85%',
+              once: true,
+            },
+            onUpdate() {
+              const raw = parseFloat(el.innerText)
+              el.innerText = isDecimal ? raw.toFixed(2) : Math.round(raw).toString()
+            },
+          }
+        )
+      })
     }, sectionRef)
 
     return () => ctx.revert()
@@ -91,7 +120,14 @@ export default function About() {
               {aboutContent.stats.map((stat, idx) => (
                 <div key={idx} className="text-center sm:text-left">
                   <div className="text-2xl sm:text-3xl font-bold font-mono text-signal">
-                    {stat.value}{stat.suffix}
+                    {/* stat-value is animated by GSAP count-up; data-target holds the final number */}
+                    <span
+                      className="stat-value"
+                      data-target={stat.value}
+                    >
+                      {stat.value}
+                    </span>
+                    {stat.suffix}
                   </div>
                   <div className="text-xs font-mono text-dim mt-1 uppercase">
                     {stat.label}

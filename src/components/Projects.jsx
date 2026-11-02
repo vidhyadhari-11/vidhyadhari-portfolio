@@ -109,7 +109,8 @@ export default function Projects() {
       const section = sectionRef.current
       if (!track || !section) return
 
-      const getDistance = () => track.scrollWidth - window.innerWidth + 80
+      // Distance the track must travel: full track width minus one viewport width
+      const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth + 80)
 
       gsap.to(track, {
         x: () => -getDistance(),
@@ -120,6 +121,7 @@ export default function Projects() {
           end: () => '+=' + getDistance(),
           scrub: 1,
           pin: true,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             if (progressRef.current) {
