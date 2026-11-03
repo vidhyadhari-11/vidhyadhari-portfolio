@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://portfolio-vidhyadharis-projects-ac91fa46.vercel.app/sitemap.xml
+Sitemap: https://portfolio-vidhyadhari.vercel.app/sitemap.xml
